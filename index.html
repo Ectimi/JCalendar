@@ -36,6 +36,7 @@
         <input class="input" type="text" placeholder="选择日期" readonly>
         <div class="container">
         </div>
+        <button class="test">test</button>
     </div>
 
 
@@ -43,7 +44,8 @@
         let $ = document.querySelector.bind(document)
         let input = $('.input')
         let calendar = new JCalendar({
-            container: '.container'
+            container: '.container',
+            immediately:false
         })
         console.log(calendar)
 
@@ -80,6 +82,9 @@
             }
         }
 
+        $('.test').onclick = ()=>{
+            console.log(calendar.year,calendar.month,calendar.date)
+        }
     </script>
 </body>
 

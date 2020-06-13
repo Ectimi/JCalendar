@@ -1,6 +1,7 @@
 class JCalendar {
-    constructor({ container }) {
+    constructor({ container,immediately = true }) {
         this.container = container;
+        this.immediately = immediately;
         this.length = 42;//日期显示长度 最多是显示 6*7 = 42个
         this.weeks = ['日', '一', '二', '三', '四', '五', '六'];
         this.months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
@@ -190,13 +191,13 @@ class JCalendar {
         date.addEventListener('click', e => {
             if (e.target.classList.contains('cy')) {
                 // if (e.target.classList.contains('current')) return;
-                this.date = e.target.innerText;
+                this.date = Number(e.target.innerText);
                 this.heightLightCurrentDate();
 
                 this.dateOnchange({
-                    year: Number(this.year),
-                    month: Number(this.month),
-                    date: Number(this.date),
+                    year: this.year,
+                    month: this.month,
+                    date: this.date,
                 })
             }
         })
@@ -253,8 +254,8 @@ class JCalendar {
                 this.refreshDate()
 
                 this.monthOnchange({
-                    year: Number(this.year),
-                    month: Number(this.month),
+                    year: this.year,
+                    month: this.month,
                 })
             }
         })
@@ -317,7 +318,7 @@ class JCalendar {
                 this.refreshYear();
 
                 this.yearOnchange({
-                    year: Number(this.year),
+                    year: this.year,
                 })
             }
         }
@@ -368,6 +369,7 @@ class JCalendar {
         this.$('#JCalendar .year-select .text').innerText = `${this.startYear}-${this.endYear}`;
     }
 
+    //刷新年份显示 
     refreshYear() {
         let yearList = document.querySelectorAll('#JCalendar .years-box .year span');
         for (let i = 0, len = yearList.length; i < len; i++) {
@@ -407,8 +409,11 @@ class JCalendar {
         } else {
             document.querySelector(this.container).append(frag);
         }
-
-        this.$('#JCalendar').style.display = 'none'
+        
+        if(!this.immediately){
+            this.$('#JCalendar').style.display = 'none'
+        }
+        
     }
 
     isShow(){
@@ -432,6 +437,8 @@ class JCalendar {
 
     //初始化
     init() {
+        if(this.isShow()) return;
+
         this.fillDates();
         this.render();
         this.reset();
