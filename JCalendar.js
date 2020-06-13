@@ -257,7 +257,7 @@ class JCalendar {
         }
 
         monthsBox.addEventListener('click', e => {
-            if (!e.target.classList.contains('month-select')) {
+            if (!e.target.classList.contains('months-box')) {
                 this.month = this.months.indexOf(e.target.innerText) + 1;
                 this.heightLightCurrentMonth();
                 this.$('.month-select').style.display = 'none';

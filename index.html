@@ -22,15 +22,18 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-top: 40px;
+            width:100%;
+            height: 100%;
+            /* margin-top: 40px; */
         }
 
         .container {
             margin-top: 20px;
         }
 
-        .test{
-            margin-top: 20px;
+        .input{
+            width:70%;
+            height:30px;
         }
     </style>
 </head>
@@ -40,7 +43,6 @@
         <input class="input" type="text" placeholder="选择日期" readonly>
         <div class="container">
         </div>
-        <button class="test">test</button>
     </div>
 
 
@@ -52,7 +54,6 @@
             immediately:false,
             // showExtra:false,
         })
-        console.log(calendar)
 
         //选择日期时触发
         calendar.dateOnchange = ({ year, month, date }) => {
@@ -87,9 +88,6 @@
             }
         }
 
-        $('.test').onclick = ()=>{
-            console.log(calendar.year,calendar.month,calendar.date)
-        }
     </script>
 </body>
 
