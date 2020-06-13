@@ -5,7 +5,7 @@
 ### 使用方法
 1. 引入 css 
 2. 引入 js
-3. 调用构造函数 new JCalendar() 然后调用实例的 show 方法
+3. 调用构造函数 new JCalendar() 
 
 
 ### 具体使用如下：（也可下载直接运行html查看具体例子）
