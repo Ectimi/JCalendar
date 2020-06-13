@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./JCalendar.css">
+    <script src="./JCalendar.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .calendar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calendar">
+        <input class="input" type="text" placeholder="选择日期" readonly>
+        <div class="container">
+        </div>
+    </div>
+
+
+    <script>
+        let $ = document.querySelector.bind(document)
+        let input = $('.input')
+        let calendar = new JCalendar({
+            container: '.container'
+        })
+        console.log(calendar)
+
+        //选择日期时触发
+        calendar.dateOnchange = ({ year, month, date }) => {
+            console.log(year, month, date);
+            input.value = `${year}年/${month}月/${date}日`;
+            calendar.hide();
+        }
+        //选择月份时触发
+        calendar.monthOnchange = ({ year, month }) => {
+            console.log(year, month)
+        }
+        //选择年份时触发
+        calendar.yearOnchange = ({ year }) => {
+            console.log(year)
+        }
+
+        input.onclick = function () {
+            calendar.show();
+        }
+
+        document.body.onclick = e => {
+            if(e.target.classList.contains('input')) return
+            if (calendar.isShow()) {
+                if (!$('.container').contains(e.target)) {
+                    calendar.hide() //隐藏
+                    
+                    // calendar.destroy() //销毁 
+                    // 调用后如需重新显示 需要依次调用 init和show方法
+                    // calendar.init();
+                    // calendar.show();
+                }
+            }
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+#JCalendar {
+    position: relative;
+    width: 280px;
+    min-height: 280px;
+    padding: 10px;
+    border: 1px solid rgb(192, 189, 189);
+}
+
+#JCalendar .year-month, #JCalendar .year {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+}
+
+#JCalendar .arrow {
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #000;
+}
+
+#JCalendar .prev-year-btn {
+    transform: rotateZ(-90deg);
+}
+
+#JCalendar .next-year-btn {
+    transform: rotateZ(90deg);
+}
+
+#JCalendar .text {
+    margin: 0 10px;
+    color: rgb(85, 85, 85);
+}
+
+#JCalendar .week {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#JCalendar .week-item {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: rgb(138, 136, 136);
+}
+
+#JCalendar .date {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+#JCalendar .date-item {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+}
+
+#JCalendar .gray {
+    color: rgb(138, 136, 136);
+}
+
+#JCalendar .current, 
+#JCalendar .month-select .currentMonth,
+#JCalendar .year-select .currentYear {
+    color: #fff;
+}
+
+#JCalendar .current::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgb(28, 187, 183);
+    z-index: -1;
+}
+
+
+
+#JCalendar .month-select,#JCalendar .year-select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding:10px;
+    box-sizing: border-box;
+    background-color: #fff;
+    display: none;
+}
+
+#JCalendar .month-select{
+    z-index: 10;
+}
+
+#JCalendar .year-select {
+    /* display: block; */
+    z-index: 20;
+}
+
+#JCalendar .month-select .months-box,
+#JCalendar .year-select .years-box {
+    display: flex;
+    flex-wrap: wrap;
+    width:100%;
+    height: calc(100% - 40px);
+}
+
+#JCalendar .months-box .month,
+#JCalendar .years-box .year{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 33.33%;
+    height: 20%;
+}
+
+#JCalendar .month span,
+#JCalendar .year span{
+    position: relative;
+}
+
+#JCalendar .month-select .currentMonth::after,
+#JCalendar .year-select .currentYear::after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgb(28, 187, 183);
+    z-index: -1;
+}
+
