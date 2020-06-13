@@ -28,6 +28,10 @@
         .container {
             margin-top: 20px;
         }
+
+        .test{
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -45,7 +49,8 @@
         let input = $('.input')
         let calendar = new JCalendar({
             container: '.container',
-            immediately:false
+            immediately:false,
+            // showExtra:false,
         })
         console.log(calendar)
 

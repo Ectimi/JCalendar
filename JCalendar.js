@@ -1,7 +1,8 @@
 class JCalendar {
-    constructor({ container,immediately = true }) {
-        this.container = container;
-        this.immediately = immediately;
+    constructor({ container, immediately = true, showExtra = true }) {
+        this.container = container; // 容器 不传默认把插件添加到body
+        this.immediately = immediately; //是否调用构造函数后立即显示，为false时需要调用show显示
+        this.showExtra = showExtra; //是否显示额外补充的日期，为true时会显示上月和下个月的部分日期填充显示，为false时仅显示当月日期
         this.length = 42;//日期显示长度 最多是显示 6*7 = 42个
         this.weeks = ['日', '一', '二', '三', '四', '五', '六'];
         this.months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
@@ -21,13 +22,13 @@ class JCalendar {
         //年份选择器的选择显示范围
         this.startYear = this.year - 4;
         this.endYear = this.year + 4;
-        
+
         //选择具体日期的钩子函数 返回 年 月 日
         this.dateOnchange = () => { }
         //选择月份的钩子函数  返回 年 月
-        this.monthOnchange = ()=>{}
+        this.monthOnchange = () => { }
         //选择年份的钩子函数 返回 年 
-        this.yearOnchange = ()=>{}
+        this.yearOnchange = () => { }
 
         this.init();
     }
@@ -71,16 +72,16 @@ class JCalendar {
         this.endYear = Number(this.year) + 4;
     }
 
-    reset(){
+    reset() {
         let d = new Date();
         this.year = d.getFullYear();
         this.month = d.getMonth() + 1;
         this.date = d.getDate();
         this.startYear = this.year - 4;
         this.endYear = this.year + 4;
-        this.refreshHead();
-        this.refreshYear();
-        this.refreshDate();
+        this.heightLightCurrentDate();
+        this.heightLightCurrentMonth();
+        this.heightLightCurrentYear();
     }
 
     //获取要填充的日期
@@ -100,9 +101,14 @@ class JCalendar {
         * 否则 获取的结果就是所需要补充显示的个数 
         */
         let gaps = this.weeks.indexOf(startWeek)
-
+        
         for (let i = 0; i < gaps; i++) {
-            this.dates.prev.unshift(prevAllDatesCount - i);
+            if(this.showExtra){
+                this.dates.prev.unshift(prevAllDatesCount - i);
+            }else{
+                this.dates.prev.unshift('')
+            }
+            
         }
 
         for (let i = 1; i <= currentAllDatesCount; i++) {
@@ -110,7 +116,11 @@ class JCalendar {
         }
 
         for (let i = 1, len = this.length - gaps - currentAllDatesCount; i <= len; i++) {
-            this.dates.next.push(i);
+            if(this.showExtra){
+                this.dates.next.push(i);
+            }else{
+                this.dates.next.push('');
+            }
         }
     }
 
@@ -156,6 +166,7 @@ class JCalendar {
     //创建显示日期
     createDate() {
         let date = this.createEl('div', { className: 'date' });
+        console.log(this.dates)
         for (let key in this.dates) {
             if (key == 'prev') {
                 this.dates[key].map(value => {
@@ -175,8 +186,8 @@ class JCalendar {
             } else if (key == 'next') {
                 let len = this.dates.prev.length + this.dates.current.length;
                 if (len <= 35) {
-                    for (let i = 1; i <= 35 - len; i++) {
-                        let dateItem = this.createEl('div', { className: 'date-item gray', innerText: i });
+                    for (let i = 0; i < 35 - len; i++) {
+                        let dateItem = this.createEl('div', { className: 'date-item gray', innerText: this.dates.next[i] });
                         date.append(dateItem);
                     }
                 } else {
@@ -330,11 +341,11 @@ class JCalendar {
     }
 
     //高亮当前日期
-    heightLightCurrentDate(){
+    heightLightCurrentDate() {
         this.$('#JCalendar .current').classList.remove('current');
         let dateList = document.querySelectorAll('#JCalendar .cy');
-        for(let i=0,len = dateList.length;i<len;i++){
-            if(dateList[i].innerText == this.date){
+        for (let i = 0, len = dateList.length; i < len; i++) {
+            if (dateList[i].innerText == this.date) {
                 dateList[i].classList.add('current');
                 return;
             }
@@ -409,24 +420,26 @@ class JCalendar {
         } else {
             document.querySelector(this.container).append(frag);
         }
-        
-        if(!this.immediately){
+
+        if (!this.immediately) {
             this.$('#JCalendar').style.display = 'none'
         }
-        
+
     }
 
-    isShow(){
+    isShow() {
         return this.$('#JCalendar') && this.$('#JCalendar').style.display != 'none';
     }
 
     //显示 
-    show(){
+    show() {
         this.$('#JCalendar').style.display = 'block'
     }
 
     //隐藏
-    hide(){
+    hide() {
+        this.$('#JCalendar .year-select').style.display = 'none';
+        this.$('.month-select').style.display = 'none';
         this.$('#JCalendar').style.display = 'none'
     }
 
@@ -437,7 +450,7 @@ class JCalendar {
 
     //初始化
     init() {
-        if(this.isShow()) return;
+        if (this.isShow()) return;
 
         this.fillDates();
         this.render();
