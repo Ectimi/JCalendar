@@ -1,5 +1,5 @@
 class JCalendar {
-    constructor({ container, immediately = true, showExtra = true }) {
+    constructor({container, immediately = true, showExtra = true}) {
         this.container = container; // 容器 不传默认把插件添加到body
         this.immediately = immediately; //是否调用构造函数后立即显示，为false时需要调用show显示
         this.showExtra = showExtra; //是否显示额外补充的日期，为true时会显示上月和下个月的部分日期填充显示，为false时仅显示当月日期
@@ -24,17 +24,29 @@ class JCalendar {
         this.endYear = this.year + 4;
 
         //选择具体日期的钩子函数 返回 年 月 日
-        this.dateOnchange = () => { }
+        this.dateOnchange = () => {
+        }
         //选择月份的钩子函数  返回 年 月
-        this.monthOnchange = () => { }
+        this.monthOnchange = () => {
+        }
         //选择年份的钩子函数 返回 年 
-        this.yearOnchange = () => { }
+        this.yearOnchange = () => {
+        }
 
         this.init();
     }
 
     $(selector) {
         return document.querySelector(selector);
+    }
+
+    /**
+     * @param {String} html 模板字符串
+     */
+    createHTML(html) {
+        let div = document.createElement('div');
+        div.innerHTML = html;
+        return div.children[0]
     }
 
     createEl(type, properties) {
@@ -49,7 +61,7 @@ class JCalendar {
      * @description 根据传入的年月获取月份的最后一天，即获取当月有多少天.
      * 如果不传，则默认为当年和当月
      * date:格式为 '2020-6'
-     * @param {String} date 
+     * @param {string} date
      */
     getCountDays(date) {
         let d = date || new Date().getFullYear + '-' + (new Date().getMonth() + 1)
@@ -61,7 +73,7 @@ class JCalendar {
 
     /**
      * @description 根据日期判断是星期几
-     * @param {String} date 
+     * @param {String} date
      */
     getWeek(date) {
         return this.weeks[new Date(date).getDay()];
@@ -101,14 +113,14 @@ class JCalendar {
         * 否则 获取的结果就是所需要补充显示的个数 
         */
         let gaps = this.weeks.indexOf(startWeek)
-        
+
         for (let i = 0; i < gaps; i++) {
-            if(this.showExtra){
+            if (this.showExtra) {
                 this.dates.prev.unshift(prevAllDatesCount - i);
-            }else{
+            } else {
                 this.dates.prev.unshift('')
             }
-            
+
         }
 
         for (let i = 1; i <= currentAllDatesCount; i++) {
@@ -116,9 +128,9 @@ class JCalendar {
         }
 
         for (let i = 1, len = this.length - gaps - currentAllDatesCount; i <= len; i++) {
-            if(this.showExtra){
+            if (this.showExtra) {
                 this.dates.next.push(i);
-            }else{
+            } else {
                 this.dates.next.push('');
             }
         }
@@ -126,10 +138,10 @@ class JCalendar {
 
     //创建日历头部
     createHead() {
-        let head = this.createEl('div', { className: 'year-month' });
-        let prevBtn = this.createEl('div', { className: 'arrow prev-year-btn' });
-        let text = this.createEl('div', { className: 'text', innerText: `${this.year}年${this.month}月` });
-        let nextBtn = this.createEl('div', { className: 'arrow next-year-btn' });
+        let head = this.createHTML(`<div class="year-month"></div>`)
+        let prevBtn = this.createHTML(`<div class="arrow prev-year-btn"></div>`)
+        let text = this.createHTML(`<div class="text">${this.year}年${this.month}月</div>`)
+        let nextBtn = this.createHTML(`<div class="arrow next-year-btn"></div>`)
 
         prevBtn.addEventListener('click', () => {
             this.year -= 1;
@@ -155,9 +167,9 @@ class JCalendar {
 
     //创建星期
     createWeek() {
-        let week = this.createEl('div', { className: 'week' });
+        let week = this.createHTML(`<div class="week"></div>`)
         for (let i = 0, len = this.weeks.length; i < len; i++) {
-            let weekItem = this.createEl('div', { className: 'week-item', innerText: this.weeks[i] });
+            let weekItem = this.createHTML(`<div class="week-item">${this.weeks[i]}</div>`)
             week.append(weekItem);
         }
         return week;
@@ -165,35 +177,30 @@ class JCalendar {
 
     //创建显示日期
     createDate() {
-        let date = this.createEl('div', { className: 'date' });
-        console.log(this.dates)
+        let date = this.createHTML(`<div class="date"></div>`)
+
         for (let key in this.dates) {
-            if (key == 'prev') {
+            if (key === 'prev') {
                 this.dates[key].map(value => {
-                    let dateItem = this.createEl('div', { className: 'date-item gray', innerText: value });
-                    date.append(dateItem);
+                    date.append(this.createHTML(`<div class="date-item gray">${value}</div>`));
                 })
-            } else if (key == 'current') {
+            } else if (key === 'current') {
                 this.dates[key].map(value => {
-                    let dateItem
-                    if (value == this.date) {
-                        dateItem = this.createEl('div', { className: 'date-item cy current', innerText: value });
+                    if (value === this.date) {
+                        date.append(this.createHTML(`<div class="date-item cy current">${value}</div>`))
                     } else {
-                        dateItem = this.createEl('div', { className: 'date-item cy', innerText: value });
+                        date.append(this.createHTML(`<div class="date-item cy">${value}</div>`))
                     }
-                    date.append(dateItem);
                 })
-            } else if (key == 'next') {
+            } else if (key === 'next') {
                 let len = this.dates.prev.length + this.dates.current.length;
                 if (len <= 35) {
                     for (let i = 0; i < 35 - len; i++) {
-                        let dateItem = this.createEl('div', { className: 'date-item gray', innerText: this.dates.next[i] });
-                        date.append(dateItem);
+                        date.append(this.createHTML(`<div class="date-item gray">${this.dates.next[i]}</div>`));
                     }
                 } else {
                     this.dates[key].map(value => {
-                        let dateItem = this.createEl('div', { className: 'date-item gray', innerText: value });
-                        date.append(dateItem);
+                        date.append(this.createHTML(`<div class="date-item gray">${value}</div>`));
                     })
                 }
             }
@@ -217,11 +224,11 @@ class JCalendar {
 
     //创建月分选择器
     createMonthSelect() {
-        let monthSelect = this.createEl('div', { className: 'month-select' })
-        let head = this.createEl('div', { className: 'year' })
-        let prevBtn = this.createEl('div', { className: 'arrow prev-year-btn' })
-        let text = this.createEl('div', { className: 'text', innerText: `${this.year}` })
-        let nextBtn = this.createEl('div', { className: 'arrow next-year-btn' })
+        let monthSelect = this.createHTML(`<div class="month-select"></div>`)
+        let head = this.createHTML(`<div class="year"></div>`)
+        let prevBtn = this.createHTML(`<div class="arrow prev-year-btn"></div>`)
+        let text = this.createHTML(`<div class="text">${this.year}</div>`)
+        let nextBtn = this.createHTML(`<div class="arrow next-year-btn"></div>`)
 
         text.addEventListener('click', () => {
             this.$('.year-select').style.display = 'block'
@@ -243,13 +250,13 @@ class JCalendar {
         head.append(text)
         head.append(nextBtn)
 
-        let monthsBox = this.createEl('div', { className: 'months-box' })
+        let monthsBox = this.createHTML(`<div class="months-box"></div>`)
         for (let i = 0, len = this.months.length; i < len; i++) {
-            let div = this.createEl('div', { className: 'month' })
-            let span = this.createEl('span', { innerText: this.months[i] })
+            let div = this.createHTML(`<div class="month"></div>`)
+            let span = this.createHTML(`<span data-month="${i + 1}">${this.months[i]}</span>`)
             span.setAttribute('data-month', i + 1)
 
-            if (i == this.month - 1) {
+            if (i === this.month - 1) {
                 span.classList.add('currentMonth')
             }
             div.append(span)
@@ -279,11 +286,11 @@ class JCalendar {
 
     //创建年分选择器
     createYearSelect() {
-        let yearSelect = this.createEl('div', { className: 'year-select' });
-        let head = this.createEl('div', { className: 'year' });
-        let prevBtn = this.createEl('div', { className: 'arrow prev-year-btn' });
-        let text = this.createEl('div', { className: 'text', innerText: `${this.startYear}-${this.endYear}` });
-        let nextBtn = this.createEl('div', { className: 'arrow next-year-btn' });
+        let yearSelect = this.createHTML(`<div class="year-select"></div>`)
+        let head = this.createHTML(`<div class="year"></div>`)
+        let prevBtn = this.createHTML(`<div class="arrow prev-year-btn"></div>`)
+        let text = this.createHTML(`<div class="text">${this.startYear}-${this.endYear}</div>`)
+        let nextBtn = this.createHTML(`<div class="arrow next-year-btn"></div>`)
 
         prevBtn.addEventListener('click', () => {
             this.startYear -= 9;
@@ -308,12 +315,12 @@ class JCalendar {
         head.append(text);
         head.append(nextBtn);
 
-        let yearsBox = this.createEl('div', { className: 'years-box' });
+        let yearsBox = this.createHTML(`<div class="years-box"></div>`)
         for (let i = this.startYear; i <= this.endYear; i++) {
-            let div = this.createEl('div', { className: 'year' });
-            let span = this.createEl('span', { innerText: i });
+            let div = this.createHTML(`<div class="year"></div>`)
+            let span = this.createHTML(`<span>${i}</span>`)
 
-            if (i == this.year) {
+            if (i === this.year) {
                 span.classList.add('currentYear');
             }
             div.append(span);
@@ -322,7 +329,7 @@ class JCalendar {
 
         yearsBox.onclick = e => {
             if (!e.target.classList.contains('years-box')) {
-                this.year = e.target.innerText;
+                this.year = Number(e.target.innerText);
                 this.$('#JCalendar .year-select').style.display = 'none';
                 this.setYearRange();
                 this.refreshHead();
@@ -345,7 +352,7 @@ class JCalendar {
         this.$('#JCalendar .current').classList.remove('current');
         let dateList = document.querySelectorAll('#JCalendar .cy');
         for (let i = 0, len = dateList.length; i < len; i++) {
-            if (dateList[i].innerText == this.date) {
+            if (Number(dateList[i].innerText) === this.date) {
                 dateList[i].classList.add('current');
                 return;
             }
@@ -366,7 +373,7 @@ class JCalendar {
 
         let yearList = document.querySelectorAll('#JCalendar .years-box .year span');
         for (let i = 0, len = yearList.length; i < len; i++) {
-            if (yearList[i].innerText == this.year) {
+            if (yearList[i].innerText === this.year) {
                 yearList[i].classList.add('currentYear');
                 return;
             }
@@ -401,7 +408,7 @@ class JCalendar {
     //首次渲染
     render() {
         let frag = document.createDocumentFragment();
-        let parent = this.createEl('div', { id: 'JCalendar' });
+        let parent = this.createHTML(`<div id="JCalendar"></div>`)
         let head = this.createHead();
         let week = this.createWeek();
         let date = this.createDate();
@@ -428,7 +435,7 @@ class JCalendar {
     }
 
     isShow() {
-        return this.$('#JCalendar') && this.$('#JCalendar').style.display != 'none';
+        return this.$('#JCalendar') && this.$('#JCalendar').style.display !== 'none';
     }
 
     //显示 

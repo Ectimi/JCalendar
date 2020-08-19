@@ -1,6 +1,5 @@
 # JCalendar
-
-这是一个使用原生js实现的日历插件，可用于vue或react
+这是一个使用原生js实现的日历插件
 
 ### 使用方法
 1. 引入 css 
@@ -11,8 +10,8 @@
 ### 具体使用如下：（也可下载直接运行html查看具体例子）
 ```javascript
 let calendar = new JCalendar({
-    container: '.container',  //container 容器，值为css选择器，不填默认添加到body
-    immediately：false, //是否立即显示，默认为true，值为false时需要实例调用 show才显示
+    container: '.container', //container 容器，值为css选择器，不填默认添加到body
+    immediately:false, //是否立即显示，默认为true，值为false时需要实例调用 show才显示
     showExtra:false, //是否显示额外补充的日期，默认为true,为true时会显示上月和下个月的部分日期填充显示，为false时仅显示当月日期
 })
 
