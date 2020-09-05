@@ -49,14 +49,6 @@ class JCalendar {
         return div.children[0]
     }
 
-    createEl(type, properties) {
-        let el = document.createElement(type);
-        for (let key in properties) {
-            el[key] = properties[key];
-        }
-        return el;
-    }
-
     /**
      * @description 根据传入的年月获取月份的最后一天，即获取当月有多少天.
      * 如果不传，则默认为当年和当月
